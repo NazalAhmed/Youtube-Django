@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    a {text-decoration: none;}
+
+    .video-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .card {
+        width: 18rem;
+    }
+
+    .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .channel-container {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    button {
+        margin-bottom: 10px;
+        margin-left: 10px;
+    }
+</style>
+
+<div class="channel-container">
+    <div class="card">
+            <img src="{{channel.profile_picture.url}}" class="card-img-top" alt="{{channel.name}}">
+            <div class="card-body">
+            <h5 class="card-title">{{channel.name}}</h5>
+            <p class="card-text">{{channel.subscribers.count}} subscribers</p>
+            </div>
+
+        {% if request.user.is_authenticated %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="channel_id" value="{{channel.id}}">
+
+                {% if request.user in channel.subscribers.all %}
+                    <button class="btn btn-primary" type="submit" name="subscribe" value="unsubscribe">Unsubscribe</button>
+                {% else %}
+                    <button class="btn btn-danger" type="submit" name="subscribe" value="subscribe">Subscribe</button>
+                {% endif %}
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+<br><br>
+
+<div class="video-container">
+
+    {% for video in videos %}
+    <a class="card" href="{% url 'video' video.id %}">
+        <img src="{{video.thumbnail.url}}" class="card-img-top" alt="{{video.title}}">
+        <div class="card-body">
+          <h5 class="card-title">{{video.title}}</h5>
+          <p class="card-text">@{{video.channel.name}}</p>
+          <p class="card-text">{{video.number_of_views}} views</p>
+          <p class="card-text">{{video.upload_time}}</p>
+        </div>
+    </a>
+    {% endfor %}
+
+</div>
+{% endblock %}

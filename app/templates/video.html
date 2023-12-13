@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="vstack align-items-center" style="margin: 20px;">
+    <video width="80%" controls>
+        <source src="{{video.video_file.url}}" type="video/mp4">
+    </video>
+
+    <p>{{video.number_of_views}} views</p>  
+
+    <div class="card text-center" style="margin: 10px;">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item" style="margin-right: 5px;">
+                    {% if request.user in video.likes.all %}
+                    <a href="{% url 'video-like' video.id %}"><i class="fa-solid fa-thumbs-up"></i></a>
+                    {% else %}
+                        <a href="{% url 'video-like' video.id %}"><i class="fa-regular fa-thumbs-up"></i></a>
+                    {% endif %}
+                </li>
+                <li class="nav-item" style="margin-right: 10px;">
+                    <p>{{video.number_of_likes}}</p>
+                </li>
+                <li class="nav-item" style="margin-right: 5px;">
+                    {% if request.user in video.dislikes.all %}
+                    <a href="{% url 'video-dislike' video.id %}"><i class="fa-solid fa-thumbs-down"></i></a>
+                    {% else %}
+                        <a href="{% url 'video-dislike' video.id %}"><i class="fa-regular fa-thumbs-down"></i></a>
+                    {% endif %}
+                </li>
+                <li class="nav-item" style="margin-right: 10px;">
+                    <p>{{video.number_of_dislikes}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+        <div class="card" style="margin: 20px; width: 80%;">
+            <div class="card-body">
+                <h4 class="card-title">{{video.title}}</h4>
+                <h6 class="card-text">{{video.description}}</h6>
+                <p class="card-text">{{video.upload_time}}</p>
+            </div>
+        </div>
+    </div>
+
+    <h4 style="margin-left: 10%;">Create a comment</h4>
+
+    <form method="post" action="{% url 'video-comment' video.id %}">
+        {% csrf_token %}
+        <div class="form-group" style="width: 80%; margin-left: 10%;">
+            <textarea class="form-control" name="comment" rows="3" cols="120"></textarea>
+        </div><br>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Post</button>
+        </div>
+
+    </form>
+</div>
+
+<h2 style="margin-left: 10%;">Comments: </h2>
+<div class="card" style="margin: 20px; width: 80%; margin-left: 10%;">
+    <ul>
+        {% for comment in video.comments.all %}
+            <li>
+                <p><strong>{{comment.user.username}}</strong>: {{comment.created_at}}</p>
+                <p>{{comment.text}}</p>
+            </li>
+        {% empty %}
+            <p>No comments yet</p>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

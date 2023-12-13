@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="POST" action="{% url 'create-channel' %}" enctype="multipart/form-data" class="mx-auto" style="width: 50%; margin-top: 10px;">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label">Channel name</label>
+        <input type="text" class="form-control" name="channelName">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Choose Profile Picture</label>
+        <input type="file" class="form-control" name="channel_pfp" accept="image/*">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</form>
+
+
+{% endblock %}

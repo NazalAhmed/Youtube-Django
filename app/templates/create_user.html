@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    #main-div {
+        width: 50%;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+</style>
+
+<div id="main-div">
+    <h1>Create User</h1>
+    <form method="post" action="{% url 'create-user' %}" style="margin-bottom: 20px;">
+        {% csrf_token %}
+        {{ form.as_p}}
+        <button type="submit" class="btn btn-primary">Create User</button>
+    </form>
+
+    <p>Already have an account? Login <a href="{% url 'login' %}">here</a></p>
+</div>
+
+{% endblock %}
